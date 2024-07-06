@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/style.css}" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Praćenje Treninga</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Početna</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">O Nama</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Treninzi</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Kontakt</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <input type="hidden" id="userID" th:value="${user.id}" />
+    <h1 th:text="'Add Workout For ' + ${selectedDate}"></h1>
+    <form
+      th:action="@{'/' + ${user.id} + '/workout-calendar/add-workout'}"
+      method="post"
+      th:object="${workout}"
+    >
+      <div class="workout-name-div">
+        <label for="">Workout Name: </label>
+        <input type="text" required th:field="*{workoutName}" />
+        <button id="add-workout-name" class="btn btn-secondary" type="button">
+          Submit
+        </button>
+      </div>
+      <div class="hidden workout-name-finish-div">
+        <h5 th:text="*{workoutName}">Workout Name: {lejda}</h5>
+      </div>
+      <table id="exercise-table" class="table hidden">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Exercise</th>
+            <th scope="col">Series</th>
+            <th scope="col">Reps</th>
+            <th scope="col">Add</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row"></th>
+            <td>
+              <input
+                th:field="*{exercises[0].exerciseName}"
+                type="text"
+                required
+              />
+            </td>
+            <td>
+              <input th:field="*{exercises[0].series}" type="text" required />
+            </td>
+            <td>
+              <input th:field="*{exercises[0].reps}" type="text" required />
+            </td>
+            <td>
+              <button
+                type="button"
+                id="add-exercise-btn"
+                class="btn btn-sm btn-primary"
+              >
+                Add
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="submit" class="btn btn-primary hidden" id="submit-form">
+        Submit Workout
+      </button>
+    </form>
+    <footer class="bg-dark text-white text-center py-3">
+      <p>&copy; 2024 Praćenje Treninga. Sva prava zadržana.</p>
+    </footer>
+    <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+    <script>
+      var userId = $("#userID").val();
+      $("#add-workout-name").on("click", function () {
+        var inputVal = $(".workout-name-div input").val();
+        var workoutNameFinished = $(".workout-name-finish-div");
+        var firstTable = $("#exercise-table");
+        var submitWorkoutBtn = $("#submit-form");
+        $(".workout-name-div").addClass("hidden");
+        workoutNameFinished.removeClass("hidden");
+        workoutNameFinished.text("Workout Name: " + inputVal);
+        firstTable.removeClass("hidden");
+        submitWorkoutBtn.removeClass("hidden");
+      });
+      $("#add-exercise-btn").on("click", function () {
+        var exerciseInput = $("input[name='exercises[0].exerciseName']").val();
+        var seriesInput = $("input[name='exercises[0].series']").val();
+        var repsInput = $("input[name='exercises[0].reps']").val();
+        var rowCount = $("#exercise-table tbody tr").length;
+        var newRow = `<tr>
+                  <th scope="row">${rowCount}</th>
+                  <td><input type="text" name="exercises[${rowCount}].exerciseName" value="${exerciseInput}" required></td>
+                  <td><input type="text" name="exercises[${rowCount}].series" value="${seriesInput}" required></td>
+                  <td><input type="text" name="exercises[${rowCount}].reps" value="${repsInput}" required></td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-danger remove-exercise-btn">Remove</button>
+                  </td>
+                </tr>`;
+        $("#exercise-table tbody").append(newRow);
+        $("input[name='exercises[0].exerciseName']").val("");
+        $("input[name='exercises[0].series']").val("");
+        $("input[name='exercises[0].reps']").val("");
+      });
+      $(document).on("click", ".remove-exercise-btn", function () {
+        $(this).closest("tr").remove();
+      });
+    </script>
+  </body>
+</html>

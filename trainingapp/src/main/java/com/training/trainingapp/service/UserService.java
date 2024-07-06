@@ -1,5 +1,7 @@
 package com.training.trainingapp.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,5 +29,9 @@ public class UserService {
 
     public boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
+    }
+
+    public Optional<UserEntity> findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

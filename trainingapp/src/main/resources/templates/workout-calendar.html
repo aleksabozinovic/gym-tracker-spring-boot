@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workout Calendar</title>
+    <link th:href="@{/webjars/fullcalendar/6.1.14/index.global.min.css}" />
+    <link
+      th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <input type="hidden" id="userID" th:value="${user.id}" />
+
+    <div id="calendar"></div>
+
+    <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
+    <script
+      th:src="@{/webjars/fullcalendar/6.1.14/index.global.min.js}"
+    ></script>
+    <script>
+      var userId = $("#userID").val();
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var calendarEl = document.getElementById("calendar");
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          dateClick: function (info) {
+            // Presusmeriti na staranicu za unos treninga
+            window.location.href =
+              "/" +
+              userId +
+              "/workout-calendar/add-workout?date=" +
+              info.dateStr;
+          },
+        });
+        calendar.render();
+      });
+    </script>
+  </body>
+</html>
