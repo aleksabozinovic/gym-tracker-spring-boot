@@ -12,6 +12,7 @@
   </head>
   <body>
     <input type="hidden" id="userID" th:value="${user.id}" />
+    <input type="hidden" id="workouts" th:value="${workouts}" />
 
     <div id="calendar"></div>
 
@@ -34,6 +35,47 @@
               userId +
               "/workout-calendar/add-workout?date=" +
               info.dateStr;
+          },
+          events: function (fetchInfo, successCallback, failureCallback) {
+            $.ajax({
+              url: "/" + userId + "/workout-calendar/events",
+              method: "GET",
+              success: function (data) {
+                var events = data.map(function (workout) {
+                  return {
+                    title: workout.workoutName,
+                    start: workout.workoutDate,
+                    extendedProps: {
+                      exercises: workout.exercises,
+                    },
+                  };
+                });
+                successCallback(events);
+              },
+              error: function () {
+                failureCallback([]);
+              },
+            });
+          },
+          eventClick: function (info) {
+            var exercises = info.event.extendedProps.exercises;
+            var exerciseDetails = exercises
+              .map(function (exercise) {
+                return (
+                  exercise.exerciseName +
+                  " - " +
+                  exercise.series +
+                  " x " +
+                  exercise.reps
+                );
+              })
+              .join("\n");
+            alert(
+              "Workout: " +
+                info.event.title +
+                "\nExercises:\n" +
+                exerciseDetails
+            );
           },
         });
         calendar.render();

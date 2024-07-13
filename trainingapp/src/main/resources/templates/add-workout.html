@@ -43,13 +43,21 @@
         </div>
       </div>
     </nav>
+
     <input type="hidden" id="userID" th:value="${user.id}" />
+
     <h1 th:text="'Add Workout For ' + ${selectedDate}"></h1>
     <form
       th:action="@{'/' + ${user.id} + '/workout-calendar/add-workout'}"
       method="post"
       th:object="${workout}"
     >
+      <input
+        type="hidden"
+        name="date"
+        id="workoutDate"
+        th:value="${selectedDate}"
+      />
       <div class="workout-name-div">
         <label for="">Workout Name: </label>
         <input type="text" required th:field="*{workoutName}" />
@@ -102,9 +110,11 @@
         Submit Workout
       </button>
     </form>
+
     <footer class="bg-dark text-white text-center py-3">
       <p>&copy; 2024 Praćenje Treninga. Sva prava zadržana.</p>
     </footer>
+
     <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.min.js}"></script>
     <script>

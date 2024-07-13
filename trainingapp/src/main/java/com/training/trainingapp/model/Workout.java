@@ -1,5 +1,6 @@
 package com.training.trainingapp.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -31,6 +32,9 @@ public class Workout {
     @Column(name = "WORKOUT_NAME")
     private String workoutName;
 
+    @Column(name = "WORKOUT_DATE")
+    private LocalDate workoutDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -42,4 +46,5 @@ public class Workout {
         exercises.add(exercise);
         exercise.setWorkout(this);
     }
+
 }

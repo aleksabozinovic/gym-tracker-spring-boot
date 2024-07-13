@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.training.trainingapp.DTO.WorkoutDTO;
+import com.training.trainingapp.mapper.WorkoutMapper;
 import com.training.trainingapp.model.Workout;
 import com.training.trainingapp.repository.ExerciseRepository;
 import com.training.trainingapp.repository.WorkoutRepository;
@@ -18,9 +20,12 @@ public class WorkoutService {
     @Autowired
     private ExerciseRepository exerciseRepository;
 
-    public List<Workout> findWorkoutsByUserId(String id) {
+    @Autowired
+    private WorkoutMapper workoutMapper;
+
+    public List<WorkoutDTO> findWorkoutsByUserId(String id) {
         // return List < Workout > workoutRepository.findAll();
-        return workoutRepository.findByUserId(id);
+        return workoutMapper.workoutToWorkoutDTO(workoutRepository.findByUserId(id));
     }
 
     public Workout saveWorkout(Workout workout) {
